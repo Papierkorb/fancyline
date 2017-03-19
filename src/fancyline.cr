@@ -2,8 +2,21 @@ require "cute" # https://github.com/Papierkorb/cute
 require "colorize"
 require "./fancyline/**"
 
-# Readline-esque library with some fancy features.  Have a look in the `sample/`
-# directory for usage examples.
+# Readline-esque library with some fancy features.
+#
+# ## Quick usage
+#
+# A simple greeter can be built like this:
+#
+# ```crystal
+# require "fancyline"
+#
+# fancy = Fancyline.new
+# name = fancy.readline("Name: ")
+# puts "Hello, #{name}"
+# ```
+#
+# Have a look in the `samples/` directory for more!
 class Fancyline
 
   # Raised when the user hit Ctrl-C (Default mapping)
