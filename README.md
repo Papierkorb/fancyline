@@ -59,7 +59,6 @@ puts "Hello, #{input}!"
 ### Step 1: The REPL skeleton
 
 The skeleton of a REPL (**R**ead **E**valuate **P**rint **L**oop) is really
-<!-- *** atom-editor is confused by the in-word bolding :( -->
 what it says on the tin: A loop, which accepts input, runs it, and then prints
 the output.  Replace the last file with the following:
 
