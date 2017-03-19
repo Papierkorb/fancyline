@@ -148,7 +148,7 @@ Possible improvement: Add a key-binding which saves the last line as
 
 [Complete source](https://github.com/Papierkorb/fancyline/tree/master/samples/tutorial/step3.cr)
 
-### Step 4:
+### Step 4: Showing information below the prompt
 
 Next we learn about using the `sub_info` middleware, which allows us to display
 additional lines of text under the prompt.  We use this feature to give the user
