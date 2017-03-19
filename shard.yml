@@ -1,0 +1,15 @@
+name: fancyline
+description: Readline-esque library with fancy features
+version: 0.1.0
+
+authors:
+  - Stefan Merettig <stefan-merettig@nuriaproject.org>
+
+dependencies:
+  cute:
+    github: Papierkorb/cute
+    version: "~> 0.2"
+
+crystal: 0.20.5
+
+license: MPL-2
