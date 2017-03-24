@@ -6,6 +6,14 @@ class Fancyline
         true
       end
 
+      def columns
+        80
+      end
+
+      def rows
+        25
+      end
+
       def clear_line
       end
 

@@ -34,6 +34,12 @@ class Fancyline
       clear_line
     end
 
+    # Terminal columns at program start.
+    abstract def columns : Int32
+
+    # Terminal rows at program start.
+    abstract def rows : Int32
+
     # Clears the current line, no matter on which column the cursor is
     abstract def clear_line
 

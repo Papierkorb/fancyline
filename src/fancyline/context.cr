@@ -28,15 +28,6 @@ class Fancyline
     # Currently active widget (if any)
     getter widget : Widget?
 
-    # FIXME: Properly get the terminal dimensions, don't rely on environment
-    #        variables that are outdated at the time of reading them.
-
-    # Terminal columns at program start.
-    getter columns = ENV["COLUMNS"]?.try(&.to_i?) || 80
-
-    # Terminal rows at program start.
-    getter rows = ENV["ROWS"]?.try(&.to_i?) || 25
-
     def initialize(@fancyline, prompt : String, tty : Tty? = nil)
       @sub_lines = 0
       @tty = tty || Fancyline::Tty.build(@fancyline.output)

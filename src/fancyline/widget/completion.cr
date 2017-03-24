@@ -56,7 +56,7 @@ class Fancyline
 
       def completion_info_string(ctx)
         # Keep a margin of 2 columns on each side.
-        width = ctx.columns - 4
+        width = ctx.tty.columns - 4
         avail = width
 
         words = Array(String).new # Mark the quick-select character

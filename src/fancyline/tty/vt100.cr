@@ -10,6 +10,12 @@ class Fancyline
         super()
       end
 
+      # FIXME: Properly get the terminal dimensions, don't rely on environment
+      #        variables that are outdated at the time of reading them.
+
+      getter columns = ENV["COLUMNS"]?.try(&.to_i?) || 80
+      getter rows = ENV["ROWS"]?.try(&.to_i?) || 25
+
       def prepare_line
         @io.print PREPARE_LINE
       end
