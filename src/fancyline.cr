@@ -49,6 +49,10 @@ class Fancyline
   # returned string does not end with a new-line, but surrounding whitespace as
   # input by the user is retained.
   #
+  # If *rprompt* is given, it'll be displayed on the right-hand end of the
+  # terminal.  If the users input comes near it (`Editor::RPROMPT_MARGIN`), it
+  # will be hidden.  If no *rprompt* is given, none is shown.
+  #
   # If this instance already has a context running it will raise.
   #
   # ## Ctrl-C, or an interrupt
@@ -63,11 +67,12 @@ class Fancyline
   #   ctx.reject! # Reject input, make `Fancyline#readline` return `nil`
   # end
   # ```
-  def readline(prompt, history = true) : String?
+  def readline(prompt, rprompt : String? = nil, history = true) : String?
     ctx = Context.new(self, prompt)
     raise "Concurrent context is already open" if @context
     @context = ctx
 
+    ctx.editor.rprompt = rprompt
     input_line = nil
 
     with_sync_output do

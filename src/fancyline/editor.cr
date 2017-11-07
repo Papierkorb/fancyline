@@ -13,12 +13,23 @@ class Fancyline
     # Default display function
     NOOP_DISPLAY_FUNC = ->(x : String){ x }
 
+    # Minimum space (in characters) between the rprompt and the prompt line.
+    # The right-prompt will be hidden if not satisfiable.
+    RPROMPT_MARGIN = 1
+
     # The `Fancyline` instance this editor was built for.
     getter fancyline : Fancyline
 
     # Prompt, a string shown just before the user input.  Used to display
     # relevant, but usually short, information.
     property prompt : String
+
+    # Prompt displayed on the right side, which will disappear when the prompt
+    # input gets near it.  Can be used to display information like current time,
+    # or other short data.  Popularized by ZSH.
+    #
+    # See `Fancyline#readline` to easily set this property.
+    property rprompt : String?
 
     # Current line buffer.  Modifying it from everywhere outside the  `Context`
     # itself is fine and is done everywhere it's useful.  Make sure to also
@@ -152,8 +163,32 @@ class Fancyline
       @tty.prepare_line
       @fancyline.output.print @prompt
       @fancyline.output.print @display_func.call(@line)
+
+      draw_rprompt
+
       @tty.cursor_to_start
       @tty.move_cursor(@prompt.size + @cursor, 0)
+    end
+
+    private def draw_rprompt
+      rprompt = @rprompt
+      return if rprompt.nil?
+
+      rprompt_dim = StringUtil.terminal_size @rprompt
+      return unless display_rprompt? rprompt_dim
+
+      @tty.cursor_to_start
+      @tty.move_cursor(@tty.columns - rprompt_dim.columns, 0)
+      @fancyline.output.print rprompt
+    end
+
+    # Returns `true` if the right-prompt can be displayed.
+    private def display_rprompt?(rprompt_dim)
+      line_dim = StringUtil.terminal_size @line
+      prompt_dim = StringUtil.terminal_size @prompt
+
+      columns = line_dim.columns + prompt_dim.columns + rprompt_dim.columns
+      @tty.columns - columns > RPROMPT_MARGIN
     end
 
     # Removes the prompt from the terminal.
