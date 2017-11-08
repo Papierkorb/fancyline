@@ -11,8 +11,8 @@ class Fancyline
       @matches = [ ] of String
       getter! editor : Editor?
 
-      @display_handle = 0
-      @sub_info_handle = 0
+      @display_handle = Cute::ConnectionHandle.new(0)
+      @sub_info_handle = Cute::ConnectionHandle.new(0)
 
       def start(ctx : Context)
         # Save the original line

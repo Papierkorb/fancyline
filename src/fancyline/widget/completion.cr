@@ -12,7 +12,7 @@ class Fancyline
       @quick_select = { } of Char => Fancyline::Completion
       @suggestions = [ ] of Fancyline::Completion
 
-      @sub_info_handle = 0
+      @sub_info_handle = Cute::ConnectionHandle.new(0)
 
       def start(ctx : Context)
         # Save the original line
