@@ -3,13 +3,11 @@ class Fancyline
   module StringUtil
     extend self
 
-    # Dimensions of a string when displayed on a terminal.  Stores the `#rows`,
-    # the `#columns`, and the count of human-visible `#characters`.
-    #
-    # `#rows` is always at least 1 (Even for an empty string).
-    # `#columns` is the size of the longest line in the string.
+    # Dimensions of a string when displayed on a terminal.  Stores the count of
+    # characters in each row (`#rows`), the longest row (`#columns`), and the
+    # total count of human-visible `#characters`.
     record Dimension,
-      rows : Int32,
+      rows : Array(Int32),
       columns : Int32,
       characters : Int32
 
@@ -24,10 +22,9 @@ class Fancyline
     #
     # Returns a `Dimension` of 0 rows and 0 columns if *str* is `nil`.
     def terminal_size(str : String?) : Dimension
-      return Dimension.new(0, 0, 0) if str.nil?
+      rows = [ ] of Int32
+      return Dimension.new(rows, 0, 0) if str.nil?
 
-      columns = 0
-      rows = 1
       size = 0
       cur_line = 0
       pos = 0
@@ -35,9 +32,8 @@ class Fancyline
       while chr = str[pos]?
         case chr
         when '\n'
-          columns = { cur_line, columns }.max
+          rows << cur_line
           cur_line = 0
-          rows += 1
         when '\t'
           spaces = TAB_SIZE - cur_line % TAB_SIZE
           spaces = TAB_SIZE if spaces == 0
@@ -53,7 +49,8 @@ class Fancyline
         pos += 1
       end
 
-      Dimension.new rows, { cur_line, columns }.max, size
+      rows << cur_line
+      Dimension.new rows, rows.max, size
     end
 
     # Returns a sub-string of *str* of `[offset...(offset+length)]`, retaining

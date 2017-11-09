@@ -20,95 +20,91 @@ end
 
 describe Fancyline::StringUtil do
   describe ".terminal_size" do
-    it "returns 0, 0, 0 for nil" do
-      len(nil).should eq dim(0, 0, 0)
+    it "returns [ ], 0, 0 for nil" do
+      len(nil).should eq dim([ ] of Int32, 0, 0)
     end
 
-    it "returns 1, 0, 0 for ''" do
-      len("").should eq dim(1, 0, 0)
+    it "returns [ 0 ], 0, 0 for ''" do
+      len("").should eq dim([ 0 ], 0, 0)
     end
 
-    it "returns 1, 1, 1 for 'a'" do
-      len("a").should eq dim(1, 1, 1)
+    it "returns [ 1 ], 1, 1 for 'a'" do
+      len("a").should eq dim([ 1 ], 1, 1)
     end
 
-    it "returns 2, 0, 0 for '\\n'" do
-      len("\n").should eq dim(2, 0, 0)
+    it "returns [ 0, 0 ], 0, 0 for '\\n'" do
+      len("\n").should eq dim([ 0, 0 ], 0, 0)
     end
 
-    it "returns 3, 0, 0 for '\\n\\n'" do
-      len("\n\n").should eq dim(3, 0, 0)
+    it "returns [ 0, 0, 0 ], 0, 0 for '\\n\\n'" do
+      len("\n\n").should eq dim([ 0, 0, 0 ], 0, 0)
     end
 
     {% unless broken_unicode_handling %}
-    it "returns 1, 1, 1 for 'ß'" do
-      len("ß").should eq dim(1, 1, 1)
+    it "returns [ 1 ], 1, 1 for 'ß'" do
+      len("ß").should eq dim([ 1 ], 1, 1)
     end
     {% end %}
 
-    it "returns 1, 7, 7 for 'abcdefg'" do
-      len("abcdefg").should eq dim(1, 7, 7)
+    it "returns [ 7 ], 7, 7 for 'abcdefg'" do
+      len("abcdefg").should eq dim([ 7 ], 7, 7)
     end
 
     {% unless broken_unicode_handling %}
-    it "returns 1, 3, 3 for 'äöü'" do
-      len("äöü").should eq dim(1, 3, 3)
+    it "returns [ 3 ], 3, 3 for 'äöü'" do
+      len("äöü").should eq dim([ 3 ], 3, 3)
     end
     {% end %}
 
-    it "returns 1, 3, 3 for '\\e[1mfoo\\e[0m'" do
-      len("\e[1mfoo\e[0m").should eq dim(1, 3, 3)
+    it "returns [ 3 ], 3, 3 for '\\e[1mfoo\\e[0m'" do
+      len("\e[1mfoo\e[0m").should eq dim([ 3 ], 3, 3)
     end
 
     {% unless broken_unicode_handling %}
-    it "returns 1, 3, 3 for '\\e[42m\\e[1mäöü\\e[0m\\e[0m'" do
-      len("\e[42m\e[1mäöü\e[0m\e[0m").should eq dim(1, 3, 3)
+    it "returns [ 3 ], 3, 3 for '\\e[42m\\e[1mäöü\\e[0m\\e[0m'" do
+      len("\e[42m\e[1mäöü\e[0m\e[0m").should eq dim([ 3 ], 3, 3)
     end
     {% end %}
 
-    it "returns 2, 2, 3 for '\\e[30;47mfo\\no\\e[0m'" do
-      len("\e[30;47mfo\no\e[0m").should eq dim(2, 2, 3)
+    it "returns [ 2, 1 ], 2, 3 for '\\e[30;47mfo\\no\\e[0m'" do
+      len("\e[30;47mfo\no\e[0m").should eq dim([ 2, 1 ], 2, 3)
     end
 
-    it "returns 1, 8, 8 for '\\t'" do
-      len("\t").should eq dim(1, 8, 8)
+    it "returns [ 8 ], 8, 8 for '\\t'" do
+      len("\t").should eq dim([ 8 ], 8, 8)
     end
 
-    it "returns 1, 8, 8 for 'abcdefg\\t'" do
-      len("abcdefg\t").should eq dim(1, 8, 8)
+    it "returns [ 8 ], 8, 8 for 'abcdefg\\t'" do
+      len("abcdefg\t").should eq dim([ 8 ], 8, 8)
     end
 
-    it "returns 1, 15, 15 for '\\tabcdefg'" do
-      len("\tabcdefg").should eq dim(1, 15, 15)
+    it "returns [ 15 ], 15, 15 for '\\tabcdefg'" do
+      len("\tabcdefg").should eq dim([ 15 ], 15, 15)
     end
 
-    it "returns 1, 16, 16 for '\\t\\t'" do
-      len("\t\t").should eq dim(1, 16, 16)
+    it "returns [ 16 ], 16, 16 for '\\t\\t'" do
+      len("\t\t").should eq dim([ 16 ], 16, 16)
     end
 
-    it "returns 1, 16, 16 for '\\tabcdefg\\t'" do
-      len("\t\t").should eq dim(1, 16, 16)
+    it "returns [ 16 ], 16, 16 for '\\tabcdefg\\t'" do
+      len("\t\t").should eq dim([ 16 ], 16, 16)
     end
 
-    it "returns 1, 24, 24 for '\\t\\t\\t'" do
-      len("\t\t\t").should eq dim(1, 24, 24)
+    it "returns [ 24 ], 24, 24 for '\\t\\t\\t'" do
+      len("\t\t\t").should eq dim([ 24 ], 24, 24)
     end
 
-    it "returns 2, 0, 0 for '\\n'" do
-      len("\n").should eq dim(2, 0, 0)
+    it "returns [ 3, 2 ], 3, 5 for 'abc\\nde'" do
+      len("abc\nde").should eq dim([ 3, 2 ], 3, 5)
     end
 
-    it "returns 2, 3, 5 for 'abc\\nde'" do
-      len("abc\nde").should eq dim(2, 3, 5)
-    end
-
-    it "returns 2, 3, 5 for 'ab\\ncde'" do
-      len("ab\ncde").should eq dim(2, 3, 5)
+    it "returns [ 2, 3 ], 3, 5 for 'ab\\ncde'" do
+      len("ab\ncde").should eq dim([ 2, 3 ], 3, 5)
     end
 
     {% unless broken_unicode_handling %}
-    it "returns 2, 3, 4 for 'ß\\ndef'" do
-      len("ß\ndef").should eq dim(2, 3, 4)
+    it "returns [ 1, 3 ], 3, 4 for 'ß\\ndef'" do
+      len("ß\ndef").should eq dim([ 1, 3 ], 3, 4)
     end
     {% end %}
   end
