@@ -38,9 +38,13 @@ class Fancyline
   # Currently active context, if any
   getter context : Context?
 
-  def initialize(@input = STDIN, @output = STDOUT)
+  # TTY control
+  property tty : Tty
+
+  def initialize(@input = STDIN, @output = STDOUT, tty : Tty? = nil)
     @history = History.new
     @actions = KeyAction.new
+    @tty = tty || Fancyline::Tty.build(@output)
   end
 
   # Reads a line, showing the *prompt*.  If *history* is `true`, the input is

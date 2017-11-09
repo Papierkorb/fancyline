@@ -43,7 +43,7 @@ class Fancyline
     # Function used to transform a line to a displayable string.
     property display_func : DisplayFunc
 
-    def initialize(@fancyline, @tty : Tty, @prompt, @line = "", @cursor = 0,
+    def initialize(@fancyline, @prompt, @line = "", @cursor = 0,
                    @display_func = NOOP_DISPLAY_FUNC)
     end
 
@@ -160,15 +160,16 @@ class Fancyline
 
     # Draws the prompt and line buffer.
     def draw_prompt
-      @tty.prepare_line
+      @fancyline.tty.prepare_line
+
       @fancyline.output.print @prompt
       @fancyline.output.print @display_func.call(@line)
 
       prompt_dim = StringUtil.terminal_size @prompt
       draw_rprompt(prompt_dim)
 
-      @tty.cursor_to_start
-      @tty.move_cursor(prompt_dim.columns + @cursor, 0)
+      @fancyline.tty.cursor_to_start
+      @fancyline.tty.move_cursor(prompt_dim.rows.last + @cursor, 0)
     end
 
     private def draw_rprompt(prompt_dim)
@@ -178,8 +179,8 @@ class Fancyline
       rprompt_dim = StringUtil.terminal_size @rprompt
       return unless display_rprompt?(prompt_dim, rprompt_dim)
 
-      @tty.cursor_to_start
-      @tty.move_cursor(@tty.columns - rprompt_dim.columns, 0)
+      @fancyline.tty.cursor_to_start
+      @fancyline.tty.move_cursor(@fancyline.tty.columns - rprompt_dim.rows.last, 0)
       @fancyline.output.print rprompt
     end
 
@@ -187,13 +188,13 @@ class Fancyline
     private def display_rprompt?(prompt_dim, rprompt_dim)
       line_dim = StringUtil.terminal_size @line
 
-      columns = line_dim.columns + prompt_dim.columns + rprompt_dim.columns
-      @tty.columns - columns > RPROMPT_MARGIN
+      columns = line_dim.rows.last + prompt_dim.rows.last + rprompt_dim.rows.last
+      @fancyline.tty.columns - columns > RPROMPT_MARGIN
     end
 
     # Removes the prompt from the terminal.
     def clear_prompt
-      @tty.prepare_line
+      @fancyline.tty.prepare_line
     end
   end
 end

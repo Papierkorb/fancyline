@@ -22,22 +22,22 @@ class Fancyline
     # Line editor used by the context
     getter editor : Editor
 
-    # TTY wrapper
-    getter tty : Tty
-
     # Currently active widget (if any)
     getter widget : Widget?
 
-    def initialize(@fancyline, prompt : String, tty : Tty? = nil)
+    def initialize(@fancyline, prompt : String)
       @sub_lines = 0
-      @tty = tty || Fancyline::Tty.build(@fancyline.output)
-
-      @editor = Editor.new(@fancyline, @tty, prompt)
+      @editor = Editor.new(@fancyline, prompt)
 
       # Set this later as we're referencing `self`.
       @editor.display_func = ->(line : String) do
         @fancyline.display.call self, line
       end
+    end
+
+    # Delegates to `Fancyline#tty`.
+    def tty : Tty
+      @fancyline.tty
     end
 
     # Starts *widget* in this context.  If there's already a widget active,
@@ -69,7 +69,7 @@ class Fancyline
     # Creates a new editor.  Can be used by widgets to show an editor.
     # The *prompt* has to start at the beginning of the output line.
     def create_editor(prompt : String, line = "", cursor = 0) : Editor
-      Editor.new(@fancyline, @tty, prompt, line, cursor)
+      Editor.new(@fancyline, prompt, line, cursor)
     end
 
     # Like `#create_editor`, but uses the supplied block as display function,
@@ -77,7 +77,7 @@ class Fancyline
     # the screen.
     def create_editor(prompt : String, line = "", cursor = 0,
                       &block : Editor::DisplayFunc) : Editor
-      Editor.new(@fancyline, @tty, prompt, line, cursor, block)
+      Editor.new(@fancyline, prompt, line, cursor, block)
     end
 
     # Clears the sub-lines, moves the cursor onto the next line, and returns the
@@ -133,10 +133,10 @@ class Fancyline
 
     # Clears the sub information lines.  The cursor position is retained.
     def clear_info
-      @tty.cursor_restore do
+      @fancyline.tty.cursor_restore do
         @sub_lines.times do
           @fancyline.output.print "\n"
-          @tty.prepare_line
+          @fancyline.tty.prepare_line
         end
       end
     end
@@ -157,12 +157,12 @@ class Fancyline
         if line.is_a?(Drawable)
           line.draw(self)
         else # line is a String
-          @tty.prepare_line
+          @fancyline.tty.prepare_line
           @fancyline.output.print line
         end
       end
 
-      @tty.move_cursor(0, -sub_info.size)
+      @fancyline.tty.move_cursor(0, -sub_info.size)
     end
   end
 end
