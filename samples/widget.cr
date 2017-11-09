@@ -11,7 +11,7 @@ puts "Hit Ctrl-F for a selection of faces to paste."
 # choose from, which are then pasted at the cursor position.
 class FacesWidget < Fancyline::Widget
   FACES = [ "😁", "😭", "🙃" ]
-  @sub_info_handle = 0
+  @sub_info_handle = Cute::ConnectionHandle.new(0)
 
   def start(ctx)
     # Add a sub_info middleware to show the user options to choose from.
