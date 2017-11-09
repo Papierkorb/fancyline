@@ -164,18 +164,19 @@ class Fancyline
       @fancyline.output.print @prompt
       @fancyline.output.print @display_func.call(@line)
 
-      draw_rprompt
+      prompt_dim = StringUtil.terminal_size @prompt
+      draw_rprompt(prompt_dim)
 
       @tty.cursor_to_start
-      @tty.move_cursor(@prompt.size + @cursor, 0)
+      @tty.move_cursor(prompt_dim.columns + @cursor, 0)
     end
 
-    private def draw_rprompt
+    private def draw_rprompt(prompt_dim)
       rprompt = @rprompt
       return if rprompt.nil?
 
       rprompt_dim = StringUtil.terminal_size @rprompt
-      return unless display_rprompt? rprompt_dim
+      return unless display_rprompt?(prompt_dim, rprompt_dim)
 
       @tty.cursor_to_start
       @tty.move_cursor(@tty.columns - rprompt_dim.columns, 0)
@@ -183,9 +184,8 @@ class Fancyline
     end
 
     # Returns `true` if the right-prompt can be displayed.
-    private def display_rprompt?(rprompt_dim)
+    private def display_rprompt?(prompt_dim, rprompt_dim)
       line_dim = StringUtil.terminal_size @line
-      prompt_dim = StringUtil.terminal_size @prompt
 
       columns = line_dim.columns + prompt_dim.columns + rprompt_dim.columns
       @tty.columns - columns > RPROMPT_MARGIN
