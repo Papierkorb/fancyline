@@ -5,6 +5,7 @@ require "../spec_helper"
 # https://github.com/crystal-lang/crystal/pull/5257
 # TODO: Remove { % begin/end % } once ^ is fixed.
 {% broken_unicode_handling = !Char::Reader.methods.map(&.name.stringify).includes?("byte_at?") %}
+
 private def len(str)
   Fancyline::StringUtil.terminal_size str
 end
@@ -58,6 +59,12 @@ describe Fancyline::StringUtil do
     it "returns 1, 3, 3 for '\\e[1mfoo\\e[0m'" do
       len("\e[1mfoo\e[0m").should eq dim(1, 3, 3)
     end
+
+    {% unless broken_unicode_handling %}
+    it "returns 1, 3, 3 for '\\e[42m\\e[1mäöü\\e[0m\\e[0m'" do
+      len("\e[42m\e[1mäöü\e[0m\e[0m").should eq dim(1, 3, 3)
+    end
+    {% end %}
 
     it "returns 2, 2, 3 for '\\e[30;47mfo\\no\\e[0m'" do
       len("\e[30;47mfo\no\e[0m").should eq dim(2, 2, 3)
