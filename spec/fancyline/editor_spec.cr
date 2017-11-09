@@ -1,9 +1,9 @@
 require "../spec_helper"
 
-private def editor(*args)
-  fancy = Fancyline.new(*args)
+private def editor
   tty = Fancyline::Tty::Dumb.new
-  Fancyline::Editor.new fancy, tty, "$ "
+  fancy = Fancyline.new(tty: tty)
+  Fancyline::Editor.new(fancy, "$ ")
 end
 
 describe Fancyline::Editor do

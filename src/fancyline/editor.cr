@@ -45,6 +45,7 @@ class Fancyline
 
     def initialize(@fancyline, @prompt, @line = "", @cursor = 0,
                    @display_func = NOOP_DISPLAY_FUNC)
+      @first = true
     end
 
     # Returns `true` if the line buffer is empty.
@@ -160,7 +161,7 @@ class Fancyline
 
     # Draws the prompt and line buffer.
     def draw_prompt
-      @fancyline.tty.prepare_line
+      clear_prompt
 
       @fancyline.output.print @prompt
       @fancyline.output.print @display_func.call(@line)
@@ -194,7 +195,20 @@ class Fancyline
 
     # Removes the prompt from the terminal.
     def clear_prompt
-      @fancyline.tty.prepare_line
+      tty = @fancyline.tty
+
+      if @first == false && @prompt.includes?('\n')
+        prompt_dim = StringUtil.terminal_size @prompt
+        extra_lines = prompt_dim.rows.size - 1
+
+        extra_lines.times do
+          tty.prepare_line
+          tty.move_cursor(0, -1)
+        end
+      end
+
+      @first = false
+      tty.prepare_line
     end
   end
 end
