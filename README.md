@@ -14,6 +14,8 @@ Readline-esque library with fancy features!
 | Autocompletion            | Yes        | Yes          |
 | Input highlighting        | Yes        | No           |
 | Can show further info     | Yes        | No           |
+| Right-side prompt         | Yes        | Hacky        |
+| Multi-line prompt         | Yes        | Manually     |
 | Blocking behaviour        | Only Fiber | Whole Thread |
 | License                   | MPL-2      | GPL          |
 
