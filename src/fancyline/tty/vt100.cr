@@ -8,13 +8,13 @@ class Fancyline
         ws_ypixel : ::LibC::UShort # vertical size, pixels
       end
 
-      {% unless flag?(:x86_64) && flag?(:darwin) %}
+      {% if flag?(:x86_64) && flag?(:darwin) %}
+        IOC_OUT      = 0x40000000
+        IOCPARM_MASK =     0x1fff
+        TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
+      {% else %}
         {% puts "Warning: Tty::Vt100#winsize is not supported on your platform." %}
-      {% end %}
-
-      IOC_OUT      = 0x40000000
-      IOCPARM_MASK =     0x1fff
-      TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104      
+      {% end %}      
 
       @[Raises]
       fun ioctl(fd : ::LibC::Int, request : ::LibC::ULong, ...) : ::LibC::Int
