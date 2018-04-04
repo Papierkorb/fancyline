@@ -8,9 +8,8 @@ class Fancyline
         ws_ypixel : ::LibC::UShort # vertical size, pixels
       end
 
-      {% unless flag?(:x86_64) && flag?(:darwin)%}
-        puts "Warning: Tty::Vt100#winsize \
-        is not supported on your platform."
+      {% unless flag?(:x86_64) && flag?(:darwin) %}
+        {% puts "Warning: Tty::Vt100#winsize is not supported on your platform." %}
       {% end %}
 
       IOC_OUT      = 0x40000000
