@@ -1,5 +1,19 @@
 class Fancyline
   class Tty
+    lib LibC
+      struct Winsize
+        ws_row : UInt16    #  rows, in characters
+        ws_col : UInt16    #  columns, in characters
+        ws_xpixel : UInt16 #  horizontal size, pixels
+        ws_ypixel : UInt16 #  vertical size, pixels
+      end
+
+      IOC_OUT      = 0x40000000
+      IOCPARM_MASK =     0x1fff
+      TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
+      fun ioctl(fd : Int32, cmd : UInt64, winsize : Winsize*) : Int32
+    end
+
     # Implements control codes for VT-100 compatible terminal emulators.
     class Vt100 < Tty
       CLEAR_LINE = "\e[2K"
@@ -10,11 +24,18 @@ class Fancyline
         super()
       end
 
-      # FIXME: Properly get the terminal dimensions, don't rely on environment
-      #        variables that are outdated at the time of reading them.
+      def winsize
+        LibC.ioctl(0, LibC::TIOCGWINSZ, out winsize)
+        winsize
+      end
 
-      getter columns = ENV["COLUMNS"]?.try(&.to_i?) || 80
-      getter rows = ENV["ROWS"]?.try(&.to_i?) || 25
+      def columns
+        winsize.ws_col
+      end
+      
+      def rows
+        winsize.ws_row
+      end
 
       def prepare_line
         @io.print PREPARE_LINE
