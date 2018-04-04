@@ -1,5 +1,24 @@
 class Fancyline
   class Tty
+    lib LibC
+      struct Winsize
+        ws_row    : ::LibC::UShort # rows, in characters
+        ws_col    : ::LibC::UShort # columns, in characters
+        ws_xpixel : ::LibC::UShort # horizontal size, pixels
+        ws_ypixel : ::LibC::UShort # vertical size, pixels
+      end
+
+      {% if flag?(:x86_64) && flag?(:darwin) %}
+        IOC_OUT      = 0x40000000
+        IOCPARM_MASK =     0x1fff
+        TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
+      {% else %}
+        {% puts "Warning: Tty::Vt100#winsize is not supported on your platform." %}
+      {% end %}      
+
+      fun ioctl(fd : ::LibC::Int, request : ::LibC::ULong, ...) : ::LibC::Int
+    end
+
     # Implements control codes for VT-100 compatible terminal emulators.
     class Vt100 < Tty
       CLEAR_LINE = "\e[2K"
@@ -10,11 +29,27 @@ class Fancyline
         super()
       end
 
-      # FIXME: Properly get the terminal dimensions, don't rely on environment
-      #        variables that are outdated at the time of reading them.
+      # Currently always returns nil when not compiled with `x86_64` and `darwin` flags
+      def winsize
+        {% if flag?(:x86_64) && flag?(:darwin) %}
+          winsize = uninitialized LibC::Winsize
+          if LibC.ioctl(0, LibC::TIOCGWINSZ, pointerof(winsize)) != -1
+            winsize
+          else
+            nil
+          end
+        {% else %}
+          nil
+        {% end %}
+      end
 
-      getter columns = ENV["COLUMNS"]?.try(&.to_i?) || 80
-      getter rows = ENV["ROWS"]?.try(&.to_i?) || 25
+      def columns
+        winsize.try(&.ws_col) || ENV["COLUMNS"]?.try(&.to_i?) || 80        
+      end
+      
+      def rows
+        winsize.try(&.ws_row) || ENV["ROWS"]?.try(&.to_i?) || 25      
+      end
 
       def prepare_line
         @io.print PREPARE_LINE
