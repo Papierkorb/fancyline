@@ -2,16 +2,23 @@ class Fancyline
   class Tty
     lib LibC
       struct Winsize
-        ws_row : UInt16    #  rows, in characters
-        ws_col : UInt16    #  columns, in characters
-        ws_xpixel : UInt16 #  horizontal size, pixels
-        ws_ypixel : UInt16 #  vertical size, pixels
+        ws_row    : ::LibC::UShort # rows, in characters
+        ws_col    : ::LibC::UShort # columns, in characters
+        ws_xpixel : ::LibC::UShort # horizontal size, pixels
+        ws_ypixel : ::LibC::UShort # vertical size, pixels
       end
+
+      {% unless flag?(:x86_64) && flag?(:darwin)%}
+        puts "Warning: Tty::Vt100#winsize \
+        is not supported on your platform."
+      {% end %}
 
       IOC_OUT      = 0x40000000
       IOCPARM_MASK =     0x1fff
-      TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
-      fun ioctl(fd : Int32, cmd : UInt64, winsize : Winsize*) : Int32
+      TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104      
+
+      @[Raises]
+      fun ioctl(fd : ::LibC::Int, request : ::LibC::ULong, ...) : ::LibC::Int
     end
 
     # Implements control codes for VT-100 compatible terminal emulators.
@@ -24,17 +31,31 @@ class Fancyline
         super()
       end
 
+      # Currently always raises when not compiled with `x86_64` and `darwin` flags
       def winsize
-        LibC.ioctl(0, LibC::TIOCGWINSZ, out winsize)
-        winsize
+        {% if flag?(:x86_64) && flag?(:darwin) %}      
+          winsize = uninitialized LibC::Winsize
+          LibC.ioctl(0, LibC::TIOCGWINSZ, pointerof(winsize))
+          winsize
+        {% else %}
+          raise "#winsize not supported on your platform"
+        {% end %}
       end
 
       def columns
-        winsize.ws_col
+        begin
+          winsize.ws_col
+        rescue
+          ENV["COLUMNS"]?.try(&.to_i?) || 80
+        end
       end
       
       def rows
-        winsize.ws_row
+        begin
+          winsize.ws_row
+        rescue
+          ENV["ROWS"]?.try(&.to_i?) || 25
+        end
       end
 
       def prepare_line
