@@ -10,11 +10,13 @@ class Fancyline
 
       {% if flag?(:x86_64) && flag?(:darwin) %}
         IOC_OUT      = 0x40000000
-        IOCPARM_MASK =     0x1fff
+        IOCPARM_MASK = 0x1fff
         TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
+      {% elsif flag?(:linux) %}
+        TIOCGWINSZ   = 0x5413 # Per /usr/include/asm-generic/ioctls.h
       {% else %}
         {% puts "Warning: Tty::Vt100#winsize is not supported on your platform." %}
-      {% end %}      
+      {% end %}
 
       fun ioctl(fd : ::LibC::Int, request : ::LibC::ULong, ...) : ::LibC::Int
     end
@@ -31,7 +33,7 @@ class Fancyline
 
       # Currently always returns nil when not compiled with `x86_64` and `darwin` flags
       def winsize
-        {% if flag?(:x86_64) && flag?(:darwin) %}
+        {% if LibC.has_constant?("TIOCGWINSZ") %}
           winsize = uninitialized LibC::Winsize
           if LibC.ioctl(0, LibC::TIOCGWINSZ, pointerof(winsize)) != -1
             winsize
@@ -44,11 +46,11 @@ class Fancyline
       end
 
       def columns
-        winsize.try(&.ws_col) || ENV["COLUMNS"]?.try(&.to_i?) || 80        
+        winsize.try(&.ws_col) || ENV["COLUMNS"]?.try(&.to_i?) || 80
       end
-      
+
       def rows
-        winsize.try(&.ws_row) || ENV["ROWS"]?.try(&.to_i?) || 25      
+        winsize.try(&.ws_row) || ENV["ROWS"]?.try(&.to_i?) || 25
       end
 
       def prepare_line
