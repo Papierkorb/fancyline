@@ -57,7 +57,7 @@ begin
     stdin = IO::Memory.new
     stdin.print "puts '=> ' + (#{input}).inspect"
     stdin.rewind
-    ruby = Process.run("ruby", input: stdin, output: true, error: true)
+    Process.run("ruby", input: stdin, output: :Inherit, error: :Inherit)
   end
 rescue err : Fancyline::Interrupt
   puts "Bye."
