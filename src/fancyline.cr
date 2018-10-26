@@ -41,6 +41,8 @@ class Fancyline
   # TTY control
   property tty : Tty
 
+  @mode : LibC::Termios? = nil
+
   def initialize(@input = STDIN, @output = STDOUT, tty : Tty? = nil)
     @history = History.new
     @actions = KeyAction.new
@@ -113,9 +115,12 @@ class Fancyline
   # block raises, the prompt will be redrawn anyway.
   #
   # See `sample/concurrent_output.cr` for sample code.
+  #
+  # Note: Raw mode, if currently active on the output, is temporarily disabled
+  # during execution of the block.
   def grab_output
     if ctx = @context
-      begin
+      reverse_tc_mode do
         ctx.editor.clear_prompt
         ctx.clear_info
         yield
@@ -144,8 +149,11 @@ class Fancyline
 
   protected def with_raw_input
     input = @input
-    if input.responds_to?(:raw) && input.tty?
-      input.raw{ yield }
+    if @mode.nil? && input.responds_to?(:fd) && input.tty?
+      preserving_tc_mode(input.fd) do |mode|
+        raw_from_tc_mode!(input.fd, mode)
+        yield
+      end
     else
       yield
     end
@@ -161,6 +169,48 @@ class Fancyline
         yield
       ensure
         output.sync = before
+      end
+    else
+      yield
+    end
+  end
+
+  # Copied from IO::FileDescriptor, as this method is sadly `private`.
+  def raw_from_tc_mode!(fd, mode)
+    LibC.cfmakeraw(pointerof(mode))
+    LibC.tcsetattr(fd, Termios::LineControl::TCSANOW, pointerof(mode))
+  end
+
+  # Copied from IO::FileDescriptor, as this method is sadly `private`.
+  protected def preserving_tc_mode(fd)
+    if LibC.tcgetattr(fd, out mode) != 0
+      raise Errno.new("Failed to enable raw mode on output")
+    end
+
+    before = mode
+    @mode = mode
+
+    begin
+      yield mode
+    ensure
+      @mode = nil
+      LibC.tcsetattr(fd, Termios::LineControl::TCSANOW, pointerof(before))
+    end
+  end
+
+  protected def reverse_tc_mode
+    mode = @mode
+    input = @input
+
+    if mode && input.responds_to?(:fd)
+      active = mode.as(LibC::Termios) # Just the "mode" condition above isn't enough
+      LibC.tcgetattr(input.fd, out current)
+      LibC.tcsetattr(input.fd, Termios::LineControl::TCSANOW, pointerof(active))
+
+      begin
+        yield
+      ensure
+        LibC.tcsetattr(input.fd, Termios::LineControl::TCSANOW, pointerof(current))
       end
     else
       yield
