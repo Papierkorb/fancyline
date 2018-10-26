@@ -1,6 +1,6 @@
 name: fancyline
 description: Readline-esque library with fancy features
-version: 0.3.0
+version: 0.3.1
 
 authors:
   - Stefan Merettig <stefan-merettig@nuriaproject.org>
