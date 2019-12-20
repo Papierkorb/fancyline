@@ -1,4 +1,4 @@
-require "../../src/fancyline"
+require "../src/fancyline"
 
 # Demonstration of a RPROMPT.  The `rprompt` will be displayed on the right-hand
 # end of the terminal window.
