@@ -1,4 +1,4 @@
-require "../../src/fancyline"
+require "../src/fancyline"
 
 # Demonstration of multi-line prompts.
 

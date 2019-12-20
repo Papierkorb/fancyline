@@ -45,12 +45,12 @@ class Fancyline
         {% end %}
       end
 
-      def columns
-        winsize.try(&.ws_col) || ENV["COLUMNS"]?.try(&.to_i?) || 80
+      def columns : Int32
+        winsize.try(&.ws_col.to_i) || ENV["COLUMNS"]?.try(&.to_i?) || 80
       end
 
-      def rows
-        winsize.try(&.ws_row) || ENV["ROWS"]?.try(&.to_i?) || 25
+      def rows : Int32
+        winsize.try(&.ws_row.to_i) || ENV["ROWS"]?.try(&.to_i?) || 25
       end
 
       def prepare_line

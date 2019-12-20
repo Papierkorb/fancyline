@@ -6,11 +6,11 @@ class Fancyline
         true
       end
 
-      def columns
+      def columns : Int32
         80
       end
 
-      def rows
+      def rows : Int32
         25
       end
 

@@ -75,7 +75,7 @@ class Fancyline
         if editor.empty?
           @matches.clear
         else
-          @matches = history.lines.grep needle_regex
+          @matches = history.lines.select needle_regex
         end
 
         @position = 0
