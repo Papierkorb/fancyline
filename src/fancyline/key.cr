@@ -4,11 +4,11 @@ class Fancyline
   module Key
     enum Control
       Backspace = 127
-      Return = 13 # Same as Ctrl-M
+      Return    =  13 # Same as Ctrl-M
       AltReturn
-      Tab = 9
+      Tab       = 9
       ShiftTab
-      Escape = 27
+      Escape    = 27
 
       CtrlA = 1
       CtrlB = 2
@@ -156,6 +156,8 @@ class Fancyline
         when 81 then Control::F2
         when 82 then Control::F3
         when 83 then Control::F4
+        else
+          nil
         end
       when 91 # Movement and F-keys
         case yield.try(&.ord)
@@ -244,6 +246,8 @@ class Fancyline
         when 70 then Control::End
         when 72 then Control::Home
         when 90 then Control::ShiftTab
+        else
+          nil
         end
       # Alt-Letter keys
       when 97 then Control::AltA
@@ -272,6 +276,8 @@ class Fancyline
       when 120 then Control::AltX
       when 121 then Control::AltY
       when 122 then Control::AltZ
+      else
+        nil
       end
     end
   end
