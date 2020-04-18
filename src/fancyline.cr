@@ -184,7 +184,7 @@ class Fancyline
   # Copied from IO::FileDescriptor, as this method is sadly `private`.
   protected def preserving_tc_mode(fd)
     if LibC.tcgetattr(fd, out mode) != 0
-      raise Errno.new("Failed to enable raw mode on output")
+      raise RuntimeError.from_errno("Failed to enable raw mode on output")
     end
 
     before = mode
