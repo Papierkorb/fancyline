@@ -4,12 +4,13 @@ version: 0.3.2
 
 authors:
   - Stefan Merettig <stefan-merettig@nuriaproject.org>
+  - Lukas Deutz <lukas.deutz@mailfence.com>
 
 dependencies:
   cute:
     github: Papierkorb/cute
     version: ">= 0.3.1"
 
-crystal: 0.34.0
+crystal: 0.35.1
 
 license: MPL-2
