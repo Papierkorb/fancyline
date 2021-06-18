@@ -5,10 +5,9 @@ class Fancyline
   # `Context` implements most of the user-facing operations like handling user
   # input and rendering the resulting output.
   class Context
-
     # Status of a `Context` instance.
     enum Status
-      Reading # We're reading user input
+      Reading  # We're reading user input
       Accepted # The input was accepted (Return key)
       Rejected # The input was rejected (Ctrl-D)
     end
@@ -98,7 +97,7 @@ class Fancyline
       end
 
       if char.control?
-        key = Key.read_control(char){ @fancyline.input.read_char }
+        key = Key.read_control(char) { @fancyline.input.read_char }
         handle_control key if key
       else
         @editor.put_char char
@@ -149,7 +148,7 @@ class Fancyline
 
       # Clear all lines we ever needed.  If we once had more middlewares than
       # now, clear those lines anyway.
-      @sub_lines = { sub_info.size, @sub_lines }.max
+      @sub_lines = {sub_info.size, @sub_lines}.max
 
       sub_info.each do |line|
         @fancyline.output.print "\n"

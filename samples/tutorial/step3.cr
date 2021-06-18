@@ -21,7 +21,7 @@ end
 # Listen for `Ctrl-H`
 fancy.actions.set Fancyline::Key::Control::CtrlH do |ctx|
   if command = get_command(ctx) # Figure out the current command
-    system("man #{command}") # And open the man-page of it
+    system("man #{command}")    # And open the man-page of it
   end
 end
 

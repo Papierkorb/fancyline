@@ -2,18 +2,18 @@ class Fancyline
   class Tty
     lib LibC
       struct Winsize
-        ws_row    : ::LibC::UShort # rows, in characters
-        ws_col    : ::LibC::UShort # columns, in characters
+        ws_row : ::LibC::UShort    # rows, in characters
+        ws_col : ::LibC::UShort    # columns, in characters
         ws_xpixel : ::LibC::UShort # horizontal size, pixels
         ws_ypixel : ::LibC::UShort # vertical size, pixels
       end
 
       {% if flag?(:x86_64) && flag?(:darwin) %}
         IOC_OUT      = 0x40000000
-        IOCPARM_MASK = 0x1fff
+        IOCPARM_MASK =     0x1fff
         TIOCGWINSZ   = IOC_OUT | ((sizeof(Winsize) & IOCPARM_MASK) << 16) | (('t'.ord) << 8) | 104
       {% elsif flag?(:linux) %}
-        TIOCGWINSZ   = 0x5413 # Per /usr/include/asm-generic/ioctls.h
+        TIOCGWINSZ = 0x5413 # Per /usr/include/asm-generic/ioctls.h
       {% else %}
         {% puts "Warning: Tty::Vt100#winsize is not supported on your platform." %}
       {% end %}
@@ -23,9 +23,9 @@ class Fancyline
 
     # Implements control codes for VT-100 compatible terminal emulators.
     class Vt100 < Tty
-      CLEAR_LINE = "\e[2K"
+      CLEAR_LINE      = "\e[2K"
       CURSOR_TO_START = "\r"
-      PREPARE_LINE = CURSOR_TO_START + CLEAR_LINE
+      PREPARE_LINE    = CURSOR_TO_START + CLEAR_LINE
 
       def initialize(@io : IO)
         super()

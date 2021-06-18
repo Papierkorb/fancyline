@@ -10,7 +10,7 @@ puts "Hit Ctrl-F for a selection of faces to paste."
 # Custom widget which upon start presents the user with a list of faces to
 # choose from, which are then pasted at the cursor position.
 class FacesWidget < Fancyline::Widget
-  FACES = [ "😁", "😭", "🙃" ]
+  FACES = ["😁", "😭", "🙃"]
   @sub_info_handle = Cute::ConnectionHandle.new(0)
 
   def start(ctx)
@@ -19,7 +19,7 @@ class FacesWidget < Fancyline::Widget
     @sub_info_handle = ctx.fancyline.sub_info.add do |ctx, yielder|
       lines = yielder.call(ctx)
 
-      options = FACES.map_with_index{|str, idx| "#{idx}: #{str}" }
+      options = FACES.map_with_index { |str, idx| "#{idx}: #{str}" }
       lines << "  " + options.join("  ")
 
       lines
@@ -34,7 +34,7 @@ class FacesWidget < Fancyline::Widget
 
   def handle(ctx, char : Char) : Bool
     # The user sent us some input
-    if choose = char.to_i? # Try to read it as numeric
+    if choose = char.to_i?     # Try to read it as numeric
       if face = FACES[choose]? # Is there a matching face?
         # Apply a completion to the line buffer at the cursor position.
         range = ctx.editor.cursor...ctx.editor.cursor

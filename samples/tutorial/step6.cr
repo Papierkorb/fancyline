@@ -23,7 +23,7 @@ fancy.autocomplete.add do |ctx, range, word, yielder|
 
   # Find the range of the current path name near the cursor.
   prev_char = ctx.editor.line[ctx.editor.cursor - 1]?
-  if !word.empty? || { '/', '.' }.includes?(prev_char)
+  if !word.empty? || {'/', '.'}.includes?(prev_char)
     arg_begin = ctx.editor.line.rindex(' ', ctx.editor.cursor - 1) || 0
     arg_end = ctx.editor.line.index(' ', arg_begin + 1) || ctx.editor.line.size
     range = (arg_begin + 1)...arg_end
@@ -84,7 +84,7 @@ if File.exists? HISTFILE # Does it exist?
   puts "  Reading history from #{HISTFILE}"
 
   File.open(HISTFILE, "r") do |io| # Open a handle
-    fancy.history.load io # And load it
+    fancy.history.load io          # And load it
   end
 end
 
@@ -100,5 +100,5 @@ end
 
 # Now we have to save our history again
 File.open(HISTFILE, "w") do |io| # So open it writable
-  fancy.history.save io # And save.  That's it.
+  fancy.history.save io          # And save.  That's it.
 end

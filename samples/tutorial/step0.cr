@@ -5,6 +5,6 @@ require "../../src/fancyline"
 
 fancy = Fancyline.new # Build a shell object
 
-fancy = Fancyline.new # Build a shell object
+fancy = Fancyline.new            # Build a shell object
 input = fancy.readline("Name: ") # Show the prompt
 puts "Hello, #{input}!"

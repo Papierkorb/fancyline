@@ -22,7 +22,7 @@ class Fancyline
     #
     # Returns a `Dimension` of 0 rows and 0 columns if *str* is `nil`.
     def terminal_size(str : String?) : Dimension
-      rows = [ ] of Int32
+      rows = [] of Int32
       return Dimension.new(rows, 0, 0) if str.nil?
 
       size = 0
@@ -60,7 +60,7 @@ class Fancyline
     # in the character counting.  Example:
     #
     # ```
-    # StringUtil.terminal_sub("\e[1mfoobar\e[0m", 3, 3) #=> "\e[1mbar\e[0m"
+    # StringUtil.terminal_sub("\e[1mfoobar\e[0m", 3, 3) # => "\e[1mbar\e[0m"
     # ```
     #
     # Note: This method is meant to be used with color-changing escape
@@ -70,7 +70,7 @@ class Fancyline
 
       trailing = ""
       char_pos = 0 # Counted characters that are not escape-sequences.
-      pos = 0 # Position in string
+      pos = 0      # Position in string
 
       end_offset = offset + length
       range = offset...end_offset

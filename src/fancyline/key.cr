@@ -114,10 +114,10 @@ class Fancyline
       when Control::Escape.value
         read_escape_sequence(char){ yield }
       {% for key in %i[
-        Backspace Tab Return
-        CtrlA CtrlB CtrlC CtrlD CtrlE CtrlF CtrlG CtrlH CtrlJ CtrlK CtrlL CtrlN
-        CtrlO CtrlP CtrlQ CtrlR CtrlS CtrlT CtrlU CtrlV CtrlW CtrlX CtrlY CtrlZ
-        ] %}
+                      Backspace Tab Return
+                      CtrlA CtrlB CtrlC CtrlD CtrlE CtrlF CtrlG CtrlH CtrlJ CtrlK CtrlL CtrlN
+                      CtrlO CtrlP CtrlQ CtrlR CtrlS CtrlT CtrlU CtrlV CtrlW CtrlX CtrlY CtrlZ
+                    ] %}
         when Control::{{ key.id }}.value
           Control::{{ key.id }}
       {% end %}
@@ -249,10 +249,10 @@ class Fancyline
         else
           nil
         end
-      # Alt-Letter keys
-      when 97 then Control::AltA
-      when 98 then Control::AltB
-      when 99 then Control::AltC
+        # Alt-Letter keys
+      when  97 then Control::AltA
+      when  98 then Control::AltB
+      when  99 then Control::AltC
       when 100 then Control::AltD
       when 101 then Control::AltE
       when 102 then Control::AltF

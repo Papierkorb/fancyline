@@ -12,7 +12,7 @@ logger.info "Hit Ctrl-D or Ctrl-C to end the demo."
 # Simulate a background task writing something onto standard output.
 spawn do
   0.upto(Int64::MAX).each do |i|
-    fancy.grab_output do # Grab the output
+    fancy.grab_output do                    # Grab the output
       logger.info "Running #{i} seconds..." # Print something
     end
 

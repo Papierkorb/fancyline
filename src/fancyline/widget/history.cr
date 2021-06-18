@@ -7,7 +7,6 @@ class Fancyline
     # makes this useful to you, the reader, for studying!  It's put to use in
     # `KeyAction::DEFAULT`s handler for `Key::Control::Up`.
     class History < Widget
-
       # The history we're operating on.  Initialized in `#start`.
       getter! history : Fancyline::History?
 
@@ -40,7 +39,7 @@ class Fancyline
 
         # Turn the `char` into a full blown `Key::Control`.  May read additional
         # data from the input.
-        key = Key.read_control(char){ ctx.fancyline.input.read_char }
+        key = Key.read_control(char) { ctx.fancyline.input.read_char }
         case key
         when Key::Control::Up
           show_entry ctx, -1

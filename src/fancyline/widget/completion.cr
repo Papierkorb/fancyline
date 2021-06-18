@@ -9,8 +9,8 @@ class Fancyline
       @original_line = ""
       @original_cursor = 0
       @position = 0
-      @quick_select = { } of Char => Fancyline::Completion
-      @suggestions = [ ] of Fancyline::Completion
+      @quick_select = {} of Char => Fancyline::Completion
+      @suggestions = [] of Fancyline::Completion
 
       @sub_info_handle = Cute::ConnectionHandle.new(0)
 
@@ -66,7 +66,7 @@ class Fancyline
           break if avail < 0
 
           if char
-            pos = word.each_char.index{|c| c.downcase == char}.not_nil!
+            pos = word.each_char.index { |c| c.downcase == char }.not_nil!
             char = word[pos] # The `char` may have a different case
             word = word.sub(pos, char.to_s.colorize.mode(:bold).to_s)
           end
@@ -88,7 +88,7 @@ class Fancyline
       end
 
       def handle_control(ctx, char)
-        key = Key.read_control(char){ ctx.fancyline.input.read_char }
+        key = Key.read_control(char) { ctx.fancyline.input.read_char }
         case key
         when Key::Control::Tab
           move_entry ctx, +1

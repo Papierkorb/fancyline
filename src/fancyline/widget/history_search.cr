@@ -8,7 +8,7 @@ class Fancyline
       @original_line = ""
       @original_cursor = 0
       @position = 0
-      @matches = [ ] of String
+      @matches = [] of String
       getter! editor : Editor?
 
       @display_handle = Cute::ConnectionHandle.new(0)
@@ -51,7 +51,7 @@ class Fancyline
           return true
         end
 
-        key = Key.read_control(char){ ctx.fancyline.input.read_char }
+        key = Key.read_control(char) { ctx.fancyline.input.read_char }
         case key
         when Key::Control::Backspace
           editor.remove_at_cursor -1

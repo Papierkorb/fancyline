@@ -91,28 +91,28 @@ describe Fancyline::Editor do
         edit = editor
         edit.line = "foo bar baz"
 
-        edit.word_at_offset(5).should eq({ "bar", 4 })
+        edit.word_at_offset(5).should eq({"bar", 4})
       end
 
       it "finds the word the offset is in" do
         edit = editor
         edit.line = "foo bar baz"
 
-        edit.word_at_offset(6).should eq({ "bar", 4 })
+        edit.word_at_offset(6).should eq({"bar", 4})
       end
 
       it "finds the word the offset is just after" do
         edit = editor
         edit.line = "foo bar baz"
 
-        edit.word_at_offset(7).should eq({ "bar", 4 })
+        edit.word_at_offset(7).should eq({"bar", 4})
       end
 
       it "finds the word at the end" do
         edit = editor
         edit.line = "foo bar baz"
 
-        edit.word_at_offset(edit.line.size).should eq({ "baz", 8 })
+        edit.word_at_offset(edit.line.size).should eq({"baz", 8})
       end
     end
 

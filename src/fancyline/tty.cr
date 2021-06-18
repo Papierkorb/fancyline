@@ -1,6 +1,5 @@
 class Fancyline
   abstract class Tty
-
     # Guesses the correct `Tty` implementation to use on *io*.
     def self.build(io)
       if io.tty?

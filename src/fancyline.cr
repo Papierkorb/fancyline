@@ -8,7 +8,7 @@ require "./fancyline/**"
 #
 # A simple greeter can be built like this:
 #
-# ```crystal
+# ```
 # require "fancyline"
 #
 # fancy = Fancyline.new
@@ -18,7 +18,6 @@ require "./fancyline/**"
 #
 # Have a look in the `samples/` directory for more!
 class Fancyline
-
   # Raised when the user hit Ctrl-C (Default mapping)
   class Interrupt < Exception
   end

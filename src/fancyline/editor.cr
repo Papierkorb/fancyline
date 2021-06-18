@@ -11,7 +11,7 @@ class Fancyline
     alias DisplayFunc = Proc(String, String)
 
     # Default display function
-    NOOP_DISPLAY_FUNC = ->(x : String){ x }
+    NOOP_DISPLAY_FUNC = ->(x : String) { x }
 
     # Minimum space (in characters) between the rprompt and the prompt line.
     # The right-prompt will be hidden if not satisfiable.
@@ -109,7 +109,7 @@ class Fancyline
       word = words[word_idx]
       pos -= word.size
 
-      { word, pos } if word.[0]?.try(&.alphanumeric?)
+      {word, pos} if word.[0]?.try(&.alphanumeric?)
     end
 
     # Writes *char* at the cursor, moving the cursor onward, as if the user had

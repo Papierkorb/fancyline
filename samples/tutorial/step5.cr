@@ -19,7 +19,7 @@ fancy.autocomplete.add do |ctx, range, word, yielder|
   # Find the range of the current path name near the cursor.  This is rather
   # convoluted: First, we make sure that we have something like a path.
   prev_char = ctx.editor.line[ctx.editor.cursor - 1]?
-  if !word.empty? || { '/', '.' }.includes?(prev_char)
+  if !word.empty? || {'/', '.'}.includes?(prev_char)
     # Then we try to find where it begins and ends
     arg_begin = ctx.editor.line.rindex(' ', ctx.editor.cursor - 1) || 0
     arg_end = ctx.editor.line.index(' ', arg_begin + 1) || ctx.editor.line.size
