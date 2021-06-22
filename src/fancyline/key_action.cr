@@ -19,6 +19,12 @@ class Fancyline
       Key::Control::Backspace => ->(ctx : Context) do
         ctx.editor.remove_at_cursor -1
       end,
+      # Add ^H as backspace to cover all possible keycodes
+      # see https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
+      # and https://unix.stackexchange.com/questions/303016/backspace-not-working-in-kali-linux-terminal-hosted-on-backbox-using-virtual-box
+      Key::Control::CtrlH => ->(ctx : Context) do
+        ctx.editor.remove_at_cursor -1
+      end,
       Key::Control::Delete => ->(ctx : Context) do
         ctx.editor.remove_at_cursor +1
       end,
