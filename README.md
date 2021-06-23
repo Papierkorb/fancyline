@@ -119,7 +119,7 @@ Possible improvement: Try to add better highlighting.
 
 One thing that's really useful is being able to pull up the man-page of the
 command you're currently working on without having to type it yourself.  We add
-a key-binding for `Ctrl-H` (`^H`) to do this for us:
+a key-binding for `Ctrl-O` (`^O`) to do this for us:
 
 ```crystal
 def get_command(ctx)
@@ -131,7 +131,7 @@ def get_command(ctx)
   line.split.first?
 end
 
-fancy.actions.set Fancyline::Key::Control::CtrlH do |ctx|
+fancy.actions.set Fancyline::Key::Control::CtrlO do |ctx|
   if command = get_command(ctx) # Figure out the current command
     system("man #{command}") # And open the man-page of it
   end

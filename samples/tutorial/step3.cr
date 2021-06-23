@@ -1,11 +1,11 @@
 require "../../src/fancyline"
 
 # Step 3 of the usage tutorial:
-#   We add a custom key binding: When the user hits `Ctrl-H` (Or `^H`), we want
+#   We add a custom key binding: When the user hits `Ctrl-O` (Or `^O`), we want
 #   to open the man-page of the currently input command.
 
 fancy = Fancyline.new
-puts "Press Ctrl-C or Ctrl-D to quit.  Press Ctrl-H for man page."
+puts "Press Ctrl-C or Ctrl-D to quit.  Press Ctrl-O for man page."
 
 # This method grabs the current method from the line buffer with respect to the
 # cursor position.
@@ -19,7 +19,7 @@ def get_command(ctx)
 end
 
 # Listen for `Ctrl-H`
-fancy.actions.set Fancyline::Key::Control::CtrlH do |ctx|
+fancy.actions.set Fancyline::Key::Control::CtrlO do |ctx|
   if command = get_command(ctx) # Figure out the current command
     system("man #{command}")    # And open the man-page of it
   end
