@@ -27,7 +27,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   fancyline:
     github: Papierkorb/fancyline
-    version: ~> 0.4.0
+    version: ~> 0.4.1
 ```
 
 ## Tutorial
