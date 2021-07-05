@@ -79,7 +79,6 @@ class Fancyline
         end
 
         @position = 0
-        editor.prompt = search_prompt
         move_entry ctx, -1
       end
 
@@ -110,6 +109,7 @@ class Fancyline
           ctx.editor.line = @matches[@position]
           ctx.editor.cursor = ctx.editor.line.size
         end
+        editor.prompt = search_prompt
       end
     end
   end
