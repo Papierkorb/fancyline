@@ -1,4 +1,5 @@
 /doc/
+/docs/
 /lib/
 /bin/
 /.shards/
@@ -8,3 +9,5 @@
 /shard.lock
 
 history.log
+
+*.dwarf
