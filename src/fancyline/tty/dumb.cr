@@ -36,6 +36,9 @@ class Fancyline
 			def switch_from_alternate_screen
 			end
 
+			def in_alternate_screen(&block)
+			end
+
       protected def get_has_colors : Bool
         false
       end

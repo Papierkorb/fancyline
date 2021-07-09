@@ -54,6 +54,16 @@ class Fancyline
     # Clears the screen and moves the cursor to the top left
     abstract def clear_screen
 
+		# Enables the alternative buffer
+		abstract def switch_to_alternate_screen
+
+		# Disables the alternative buffer
+		abstract def switch_from_alternate_screen
+
+		# Switch to the alternate screen (think `less` or `man`) and restores
+		# it afterwards.
+		abstract def in_alternate_screen(&block)
+
     protected abstract def get_has_colors : Bool
   end
 end
