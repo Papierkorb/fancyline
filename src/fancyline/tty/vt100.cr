@@ -90,6 +90,21 @@ class Fancyline
         @io.print "\e[2J\e[H"
       end
 
+			def switch_to_alternate_screen
+				@io.print "\e[?1049h"
+			end
+
+			def switch_from_alternate_screen
+				@io.print "\e[?1049l"
+			end
+
+			def in_alternate_screen(&block)
+				switch_to_alternate_screen
+				yield
+			ensure
+				switch_from_alternate_screen
+			end
+
       protected def get_has_colors : Bool
         if term = ENV["TERM"]?
           term.ends_with?("colors")

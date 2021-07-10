@@ -65,4 +65,16 @@ describe Fancyline::Tty::Vt100 do
       tty(&.clear_screen).should eq "\e[2J\e[H"
     end
   end
+
+  describe "#switch_to_alternate_screen" do
+    it "switches to the alternate screen" do
+      tty(&.switch_to_alternate_screen).should eq "\e[?1049h"
+    end
+  end
+
+  describe "#switch_from_alternate_screen" do
+    it "switches from the alternate screen" do
+      tty(&.switch_from_alternate_screen).should eq "\e[?1049l"
+    end
+  end
 end

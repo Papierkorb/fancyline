@@ -12,8 +12,6 @@ require "../../src/fancyline"
 #   current working directory.
 
 fancy = Fancyline.new
-puts "Press Ctrl-C or Ctrl-D to quit.  Press Ctrl-H for man page."
-puts "Press Tab for path auto-completion."
 
 fancy.autocomplete.add do |ctx, range, word, yielder|
   completions = yielder.call(ctx, range, word)
@@ -79,19 +77,23 @@ end
 #
 HISTFILE = "#{Dir.current}/history.log"
 
-# If our HISTFILE exists, read it into the history.
-if File.exists? HISTFILE # Does it exist?
-  puts "  Reading history from #{HISTFILE}"
-
-  File.open(HISTFILE, "r") do |io| # Open a handle
-    fancy.history.load io          # And load it
-  end
-end
 
 begin # Get rid of stacktrace on ^C
-  while input = fancy.readline("$ ")
-    system(input)
-  end
+	fancy.tty.in_alternate_screen do
+		puts "Press Ctrl-C or Ctrl-D to quit.  Press Ctrl-H for man page."
+		puts "Press Tab for path auto-completion."
+		# If our HISTFILE exists, read it into the history.
+		if File.exists? HISTFILE # Does it exist?
+			puts "  Reading history from #{HISTFILE}"
+
+			File.open(HISTFILE, "r") do |io| # Open a handle
+				fancy.history.load io          # And load it
+			end
+		end
+		while input = fancy.readline("$ ")
+			system(input)
+		end
+	end
 
   # Just rescue from `Fancyline::Interrupt`, say good-bye and we're done.
 rescue err : Fancyline::Interrupt
