@@ -1,4 +1,4 @@
-name: Crystal CI
+name: CI
 
 on:
   push:
@@ -8,15 +8,21 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     container:
       image: crystallang/crystal
-
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: shards install
     - name: Run tests
       run: crystal spec
+  style:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check style
+      run: crystal tool format --check
+
